@@ -37,7 +37,7 @@ e.g.
 
 ***
 
-### Pseudo Code / Flowcharts
+## Pseudo Code / Flowcharts
 
 Use Pseudo Code and Flowcharts to help map out program flow in an imperative form.
 
@@ -61,11 +61,11 @@ Pseudocode terms
 
 `SUBPROCESS` - declarative way of defining a subprocess of progam not covered in pseudocode. Assumed this works.
 
-### Type Coercion
+## Type Coercion
 
-#### Explicit Type Coercion
+### Explicit Type Coercion
 
-##### Numbers
+#### Numbers
 
 `Number` used to explictly coerce a type to a Number, if it can't convert will returned `NaN`. Ignores whitespace before and after number, though will covert a whitespace only string to 0.
 
@@ -73,7 +73,7 @@ Pseudocode terms
 
 `+` also coerces the same as `Number` however isn't as explicit
 
-##### Strings
+#### Strings
 
 `toString` method, apart from `null` and `undefined`. numbers need to be assigned to variables before using `toString` or using parenthesis `(4).toString()`. `4..toString()` is also possible.
 
@@ -81,7 +81,7 @@ Pseudocode terms
 
 Inside template literals interpolated expressions are implicitly coerced to Strings there is no need to explicitly coerce them.
 
-#### Implicit Coercion
+### Implicit Coercion
 
 We almost always prefer to use `===` over `==`.
 
@@ -94,11 +94,11 @@ Rules to remember.
 
 `+` implicitly coerces values. If either side of the operator contains a string then generally the other side will be coerced to a string and concatenated. Other primitives will be coerced to numbers. If either operand is an object then both operands will be coerced to a string and concatenated together.
 
-##### Relational operators
+### Relational operators
 
 Do numeric or lexicographical order (strings). If both sides are strings then ordered lexocgraphically otherwise both sides are coerced to numbers.
 
-#### Best Practices 
+### Best Practices 
 
 - *Always use explicit Type Coercions*
 - *Always use strict equality operators `===` and `!==`*
@@ -106,3 +106,19 @@ Do numeric or lexicographical order (strings). If both sides are strings then or
 Exceptions 
 - Don't use explicity type coercion inside template literals.
 - You can use `+` to coerce Strings to numbers.
+
+## Coding Tips
+
+Functions should either return a value or perform a side effect not both.
+
+Think about how a function will be used before thinking about implementation.
+
+Logic grouping of code, think about the scope of your code. Variables should be declared just before you use them, and shouldn't be outside the scope they are being used.
+
+## Scope
+
+- Rule 1: Outer scope variables can be accessed by the inner scope
+- Rule 2: Inner scope variables cannot be accessed in the outer scope
+- Rule 3: Peer scopes do not conflict
+- Rule 4: Nested functions have their own variable scope
+- Rule 5: Inner scope variables can shadow outer scope variables
