@@ -1,4 +1,5 @@
 const readline = require('readline-sync');
+const MESSAGES = require('./mortgage_calculator_messages.json');
 
 function prompt(message) {
   return `--> ${message}`;
@@ -26,7 +27,7 @@ function getInput(message, validator, validationMessage) {
 
 function loanValidator(input) {
   let err = false;
-  if (input.startsWith("£") || input.startsWith("$")) {
+  if (input.startsWith("£")) {
     input = input.slice(1);
   }
   input = input.replace(/,/g, '');
@@ -59,27 +60,35 @@ function durationValidator(input) {
 }
 
 let loanAmount = getInput(
-  'How much loan would you like to borrow? (>= £0) - input will be rounded down: ',
+  MESSAGES['loanAmountPrompt'],
   loanValidator,
-  'Sorry, the loan amount must be a non-negative number.');
+  MESSAGES['loanAmountValidationMessage']
+);
 
 let apr = getInput(
-  'What is the Annual Percentage Rate? (>= 0% APR <= 25%): ',
+  MESSAGES['aprPrompt'],
   aprValidator,
-  'Sorry, the Annual Percentage Rate must be between 0% and 25%.'
+  MESSAGES['aprValidationMessage']
 );
 
 let durationInYears = getInput(
-  'How long is the loan duration? (>= 1 whole years <= 30) - input will be rounded down: ',
+  MESSAGES['durationPrompt'],
   durationValidator,
-  'Sorry, the loan duration must be between 1 and 30 years.');
+  MESSAGES['durationValidationMessage']);
 
 let durationInMonths = durationInYears * 12;
 let monthlyInterestRate = (apr / 100) / 12; // convert to decimal then to monthly amount
 
-let monthlyPayments = loanAmount *
-  (monthlyInterestRate /
-    (1 - Math.pow((1 + monthlyInterestRate), (-durationInMonths)))
-  );
 
-promptUser(`Your monthly payments are £${monthlyPayments.toFixed(2)}`);
+let monthlyPayments;
+
+if (monthlyInterestRate > 0) {
+  monthlyPayments = loanAmount *
+    (monthlyInterestRate /
+      (1 - Math.pow((1 + monthlyInterestRate), (-durationInMonths)))
+    );
+} else {
+  monthlyPayments = loanAmount / durationInMonths;
+}
+
+promptUser(`${MESSAGES['monthlyPaymentsMessage']}${monthlyPayments.toFixed(2)}`);

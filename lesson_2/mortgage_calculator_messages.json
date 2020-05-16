@@ -1,0 +1,9 @@
+{
+  "loanAmountPrompt": "How much loan would you like to borrow? (>= £0) - input will be rounded down: ",
+  "loanAmountValidationMessage": "Sorry, the loan amount must be a non-negative number.",
+  "aprPrompt": "What is the Annual Percentage Rate? (>= 0% APR <= 25%): ",
+  "aprValidationMessage": "Sorry, the Annual Percentage Rate must be between 0% and 25%.",
+  "durationPrompt": "How long is the loan duration? (>= 1 whole years <= 30) - input will be rounded down: ",
+  "durationValidationMessage": "Sorry, the loan duration must be between 1 and 30 years.",
+  "monthlyPaymentsMessage" : "Your monthly payments are £"
+}
