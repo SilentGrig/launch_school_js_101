@@ -59,36 +59,67 @@ function durationValidator(input) {
   return [validatedInput, err];
 }
 
-let loanAmount = getInput(
-  MESSAGES['loanAmountPrompt'],
-  loanValidator,
-  MESSAGES['loanAmountValidationMessage']
-);
+function getUserInputs() {
+  let loanAmount = getInput(
+    MESSAGES['loanAmountPrompt'],
+    loanValidator,
+    MESSAGES['loanAmountValidationMessage']
+  );
 
-let apr = getInput(
-  MESSAGES['aprPrompt'],
-  aprValidator,
-  MESSAGES['aprValidationMessage']
-);
+  let apr = getInput(
+    MESSAGES['aprPrompt'],
+    aprValidator,
+    MESSAGES['aprValidationMessage']
+  );
 
-let durationInYears = getInput(
-  MESSAGES['durationPrompt'],
-  durationValidator,
-  MESSAGES['durationValidationMessage']);
-
-let durationInMonths = durationInYears * 12;
-let monthlyInterestRate = (apr / 100) / 12; // convert to decimal then to monthly amount
-
-
-let monthlyPayments;
-
-if (monthlyInterestRate > 0) {
-  monthlyPayments = loanAmount *
-    (monthlyInterestRate /
-      (1 - Math.pow((1 + monthlyInterestRate), (-durationInMonths)))
-    );
-} else {
-  monthlyPayments = loanAmount / durationInMonths;
+  let durationInYears = getInput(
+    MESSAGES['durationPrompt'],
+    durationValidator,
+    MESSAGES['durationValidationMessage']
+  );
+  return [loanAmount, apr, durationInYears];
 }
 
-promptUser(`${MESSAGES['monthlyPaymentsMessage']}${monthlyPayments.toFixed(2)}`);
+function mortgageCalculator() {
+  console.log("\n");
+
+  let [loanAmount, apr, durationInYears] = getUserInputs();
+
+  let durationInMonths = durationInYears * 12;
+  let monthlyInterestRate = (apr / 100) / 12; // convert to decimal then to monthly amount
+
+
+  let monthlyPayments;
+
+  if (monthlyInterestRate > 0) {
+    monthlyPayments = loanAmount *
+      (monthlyInterestRate /
+        (1 - Math.pow((1 + monthlyInterestRate), (-durationInMonths)))
+      );
+  } else {
+    monthlyPayments = loanAmount / durationInMonths;
+  }
+
+  console.log('\n');
+  promptUser(`${MESSAGES['monthlyPaymentsMessage']}${monthlyPayments.toFixed(2)}`);
+  console.log('\n');
+}
+
+function main() {
+  console.clear();
+  promptUser(MESSAGES['welcomeMessage']);
+
+  do {
+    mortgageCalculator();
+
+    let continueCalculating = readline
+      .question(MESSAGES['anotherCalculationPrompt']);
+
+    if (continueCalculating.toLowerCase()[0] !== 'y') {
+      break;
+    }
+
+  } while (true);
+}
+
+main();
