@@ -1,8 +1,17 @@
 const readline = require('readline-sync');
-const messages = require('./calculator_messages.json');
+const MESSAGES = require('./calculator_messages.json');
 
-function prompt(message) {
-  console.log(`=> ${message}`);
+const LOCALISATION_CHOICE = 'test';
+const LOCALISATION = LOCALISATION_CHOICE in MESSAGES ?
+  LOCALISATION_CHOICE : 'english';
+
+function messages(message, lang = 'english') {
+  return MESSAGES[lang][message];
+}
+
+function prompt(message, output = '') {
+  message = messages(message, LOCALISATION)
+  console.log(`=> ${message}${output}`);
 }
 
 function invalidNumber(number) {
@@ -10,30 +19,30 @@ function invalidNumber(number) {
 }
 
 let doCalculation = true;
-prompt(messages.welcomeMessage);
+prompt('welcomeMessage');
 
 while (doCalculation) {
-  prompt(messages.firstNumberPrompt);
+  prompt('firstNumberPrompt');
   let number1 = readline.question();
 
   while (invalidNumber(number1)) {
-    prompt(messages.invalidNumberPrompt);
+    prompt('invalidNumberPrompt');
     number1 = readline.question();
   }
 
-  prompt(messages.secondNumberPrompt);
+  prompt('secondNumberPrompt');
   let number2 = readline.question();
 
   while (invalidNumber(number2)) {
-    prompt(messages.invalidNumberPrompt);
+    prompt('invalidNumberPrompt');
     number2 = readline.question();
   }
 
-  prompt(messages.operationsPrompt);
+  prompt('operationsPrompt');
   let operation = readline.question();
 
   while (!['1', '2', '3', '4'].includes(operation)) {
-    prompt(messages.invalidOperationPrompt);
+    prompt('invalidOperationPrompt');
     operation = readline.question();
   }
 
@@ -53,15 +62,15 @@ while (doCalculation) {
       break;
   }
   // Print the result to the terminal.
-  prompt(`${messages.resultPrompt} ${output}`);
+  prompt('resultPrompt', ` ${output}`);
 
   // default response is Y
   // if response is N or n stop asking for calculations
-  prompt(messages.anotherCalculationPrompt);
+  prompt('anotherCalculationPrompt');
   const response = readline.question();
   if (response.toLowerCase() === 'n') {
     doCalculation = false;
   }
 }
 
-prompt(messages.goodbyePrompt);
+prompt('goodbyePrompt');

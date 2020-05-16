@@ -1,11 +1,24 @@
 {
-  "welcomeMessage": "Welcome to the Calculator!",
-  "firstNumberPrompt": "What's the first number?",
-  "secondNumberPrompt": "What's the second number?",
-  "invalidNumberPrompt": "Hmm... that doesn't look like a valid number.",
-  "operationsPrompt": "What operation would you like to perform?\n1) Add 2) Subtract 3) Multiply 4) Divide",
-  "invalidOperationPrompt" : "Must choose 1, 2, 3 or 4",
-  "resultPrompt": "The result is:",
-  "anotherCalculationPrompt": "Do you want to perform another calculation? (Y/n)",
-  "goodbyePrompt": "Goodbye!"
+  "english": {
+    "welcomeMessage": "Welcome to the Calculator!",
+    "firstNumberPrompt": "What's the first number?",
+    "secondNumberPrompt": "What's the second number?",
+    "invalidNumberPrompt": "Hmm... that doesn't look like a valid number.",
+    "operationsPrompt": "What operation would you like to perform?\n1) Add 2) Subtract 3) Multiply 4) Divide",
+    "invalidOperationPrompt": "Must choose 1, 2, 3 or 4",
+    "resultPrompt": "The result is:",
+    "anotherCalculationPrompt": "Do you want to perform another calculation? (Y/n)",
+    "goodbyePrompt": "Goodbye!"
+  },
+  "welsh": {
+    "welcomeMessage": "Croeso i y Cyfrifyadir!",
+    "firstNumberPrompt": "What's the first number?",
+    "secondNumberPrompt": "What's the second number?",
+    "invalidNumberPrompt": "Hmm... that doesn't look like a valid number.",
+    "operationsPrompt": "What operation would you like to perform?\n1) Add 2) Subtract 3) Multiply 4) Divide",
+    "invalidOperationPrompt": "Must choose 1, 2, 3 or 4",
+    "resultPrompt": "The result is:",
+    "anotherCalculationPrompt": "Do you want to perform another calculation? (Y/n)",
+    "goodbyePrompt": "Goodbye!"
+  }
 }
