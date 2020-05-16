@@ -122,3 +122,7 @@ Logic grouping of code, think about the scope of your code. Variables should be 
 - Rule 3: Peer scopes do not conflict
 - Rule 4: Nested functions have their own variable scope
 - Rule 5: Inner scope variables can shadow outer scope variables
+
+## Pass By Reference / Pass By Value
+
+Primitive values are passed by value. The original will not be mutated. However Objects when passed as arguments to a function behave almost like Pass By Reference. Some call it 'call by sharing'. If you perform destructive operations on the object such as `Array.prototype.push` this will mutate the original array. However if you try to re-assign the object within the scope this will not reassign the outer scoped variable. In effect it has created a local variable pointing to the same object. Therefore reassigning the locally scope variable obviously wouldn't reassign the outerscoped variable.
