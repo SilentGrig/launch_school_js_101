@@ -126,3 +126,22 @@ Logic grouping of code, think about the scope of your code. Variables should be 
 ## Pass By Reference / Pass By Value
 
 Primitive values are passed by value. The original will not be mutated. However Objects when passed as arguments to a function behave almost like Pass By Reference. Some call it 'call by sharing'. If you perform destructive operations on the object such as `Array.prototype.push` this will mutate the original array. However if you try to re-assign the object within the scope this will not reassign the outer scoped variable. In effect it has created a local variable pointing to the same object. Therefore reassigning the locally scope variable obviously wouldn't reassign the outerscoped variable.
+
+## Coding Tips 2
+
+Don't write function that do more than one of:
+- mutate a value
+- output something
+- return a meaningful value
+
+Don't mutate the caller during iteration.
+
+Beware of variable shadowing - name variables appropriately, even using longer more meaningful names.
+
+Don't use assignment in conditional
+
+Use underscore for unused callback parameters.
+
+e.g. in a forEach when you just want index but not element.
+
+`ForEach((_, index) => something with index)`
