@@ -1,5 +1,5 @@
 {
-  "rockPaperScissors": {
+  "RockPaperScissors": {
     "rock": {
       "display": "(r)ock",
       "shorthand": "r",
@@ -16,7 +16,7 @@
       "beats": "paper"
     }
   },
-  "rockPaperScissorsSpockLizard": {
+  "RockPaperScissorsSpockLizard": {
     "rock": {
       "display": "(r)ock",
       "shorthand": "r",
