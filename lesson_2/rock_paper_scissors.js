@@ -1,7 +1,8 @@
 const readline = require('readline-sync');
 const GAME_TYPES = require('./rock_paper_scissors_config.json');
 
-const CHOICES = Object.assign(GAME_TYPES['rockPaperScissorsSpockLizard']);
+const CHOICES = Object.assign(GAME_TYPES['rockPaperScissors']);
+const DISPLAY_CHOICES = Object.values(CHOICES).map(choice => choice.display);
 const VALID_CHOICES = Object.keys(CHOICES);
 
 function getFullHandChoice(choice) {
@@ -32,7 +33,7 @@ function prompt(message) {
 let isPlaying = true;
 
 while (isPlaying) {
-  prompt(`Choose one: ${VALID_CHOICES.join(', ')}`);
+  prompt(`Choose one: ${DISPLAY_CHOICES.join(', ')}`);
   let choice = getFullHandChoice(readline.question());
 
   while (!choice) {

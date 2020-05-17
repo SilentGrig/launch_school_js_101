@@ -1,14 +1,17 @@
 {
   "rockPaperScissors": {
     "rock": {
+      "display": "(r)ock",
       "shorthand": "r",
       "beats": "scissors"
     },
     "paper": {
+      "display": "(p)aper",
       "shorthand": "p",
       "beats": "rock"
     },
     "scissors": {
+      "display": "(s)cissors",
       "shorthand": "s",
       "beats": "paper"
     }
