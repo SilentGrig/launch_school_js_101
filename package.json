@@ -1,0 +1,26 @@
+{
+  "name": "launch_school_js_101",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^5.12.1",
+    "eslint-cli": "^1.1.1",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SilentGrig/launch_school_js_101.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SilentGrig/launch_school_js_101/issues"
+  },
+  "homepage": "https://github.com/SilentGrig/launch_school_js_101#readme"
+}
