@@ -1,15 +1,24 @@
 const readline = require('readline-sync');
 const GAME_TYPES = require('./rock_paper_scissors_config.json');
 
-const VALID_CHOICES = Object.keys(GAME_TYPES['rockPaperScissorsSpockLizard']);
-const CHOICE_BEATS = Object.assign(GAME_TYPES['rockPaperScissorsSpockLizard']);
+const CHOICES = Object.assign(GAME_TYPES['rockPaperScissorsSpockLizard']);
+const VALID_CHOICES = Object.keys(CHOICES);
+
+function getFullHandChoice(choice) {
+  for (let possibleChoice of VALID_CHOICES) {
+    if (possibleChoice === choice || CHOICES[possibleChoice].shorthand === choice) {
+      return possibleChoice;
+    }
+  }
+  return null;
+}
 
 function getWinner(choice, computerChoice) {
   prompt(`You chose ${choice}, computer chose ${computerChoice}`);
 
   if (choice === computerChoice) return "It's a tie";
 
-  if (CHOICE_BEATS[choice].includes(computerChoice)) {
+  if (CHOICES[choice]['beats'].includes(computerChoice)) {
     return 'You win!';
   } else {
     return 'Computer wins!';
@@ -24,11 +33,11 @@ let isPlaying = true;
 
 while (isPlaying) {
   prompt(`Choose one: ${VALID_CHOICES.join(', ')}`);
-  let choice = readline.question();
+  let choice = getFullHandChoice(readline.question());
 
-  while (!VALID_CHOICES.includes(choice)) {
+  while (!choice) {
     prompt("That's not a valid choice");
-    choice = readline.question();
+    choice = getFullHandChoice(readline.question());
   }
 
   let randomIndex = Math.ceil(Math.random() * VALID_CHOICES.length) - 1;
