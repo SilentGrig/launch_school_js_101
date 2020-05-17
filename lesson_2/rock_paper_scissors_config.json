@@ -1,0 +1,14 @@
+{
+  "rockPaperScissors": {
+    "rock": "scissors",
+    "paper": "rock",
+    "scissors": "paper"
+  },
+  "rockPaperScissorsSpockLizard": {
+    "rock": ["scissors", "lizard"],
+    "paper": ["rock", "spock"],
+    "scissors": ["paper", "lizard"],
+    "spock": ["rock", "scissors"],
+    "lizard": ["paper", "spock"]
+  }
+}

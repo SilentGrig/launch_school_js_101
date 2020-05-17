@@ -1,19 +1,18 @@
 const readline = require('readline-sync');
-const VALID_CHOICES = ['rock', 'paper', 'scissors'];
+const GAME_TYPES = require('./rock_paper_scissors_config.json');
+
+const VALID_CHOICES = Object.keys(GAME_TYPES['rockPaperScissorsSpockLizard']);
+const CHOICE_BEATS = Object.assign(GAME_TYPES['rockPaperScissorsSpockLizard']);
 
 function getWinner(choice, computerChoice) {
   prompt(`You chose ${choice}, computer chose ${computerChoice}`);
 
-  if ((choice === 'rock' && computerChoice === 'scissors') ||
-    (choice === 'paper' && computerChoice === 'rock') ||
-    (choice === 'scissors' && computerChoice === 'paper')) {
+  if (choice === computerChoice) return "It's a tie";
+
+  if (CHOICE_BEATS[choice].includes(computerChoice)) {
     return 'You win!';
-  } else if ((choice === 'rock' && computerChoice === 'paper') ||
-    (choice === 'paper' && computerChoice === 'scissors') ||
-    (choice === 'scissors' && computerChoice === 'rock')) {
-    return 'Computer wins!';
   } else {
-    return "It's a tie";
+    return 'Computer wins!';
   }
 }
 
