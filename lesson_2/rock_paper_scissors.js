@@ -1,14 +1,15 @@
 const readline = require('readline-sync');
 const GAME_TYPES = require('./rock_paper_scissors_config.json');
 
-const CHOICES = Object.assign(GAME_TYPES['rockPaperScissors']);
+const CHOICES = Object.assign(GAME_TYPES['rockPaperScissorsSpockLizard']);
 const DISPLAY_CHOICES = Object.values(CHOICES).map(choice => choice.display);
 const VALID_CHOICES = Object.keys(CHOICES);
 
 function getFullHandChoice(choice) {
-  for (let possibleChoice of VALID_CHOICES) {
-    if (possibleChoice === choice || CHOICES[possibleChoice].shorthand === choice) {
-      return possibleChoice;
+  for (let choiceName of VALID_CHOICES) {
+    if (choiceName === choice ||
+        CHOICES[choiceName].shorthand === choice) {
+      return choiceName;
     }
   }
   return null;

@@ -18,22 +18,27 @@
   },
   "rockPaperScissorsSpockLizard": {
     "rock": {
+      "display": "(r)ock",
       "shorthand": "r",
       "beats": ["scissors", "lizard"]
     },
     "paper": {
+      "display": "(p)aper",
       "shorthand": "p",
       "beats": ["rock", "spock"]
     },
     "scissors": {
+      "display": "(sc)issors",
       "shorthand": "sc",
       "beats": ["paper", "lizard"]
     },
     "spock": {
+      "display": "(sp)ock",
       "shorthand": "sp",
       "beats": ["rock", "scissors"]
     },
     "lizard": {
+      "display": "(l)izard",
       "shorthand": "l",
       "beats": ["paper", "spock"]
     }
