@@ -30,8 +30,9 @@ function loanValidator(input) {
     input = input.slice(1);
   }
   input = input.replace(/,/g, '');
-  // silently truncate floating point numbers
-  let validatedInput = parseInt(input, 10);
+  let validatedInput = Number(input);
+  // only use whole numbers for loan
+  validatedInput = Math.floor(validatedInput);
   if (Number.isNaN(validatedInput) || validatedInput < 0) {
     return null;
   }
