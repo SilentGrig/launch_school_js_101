@@ -15,6 +15,7 @@ function getInput(message, validator, validationMessage) {
 
   do {
     input = readline.question(prompt(message));
+    input = input.trim();
     validatedInput = validator(input);
     if (validatedInput === null) {
       promptUser(validationMessage);
@@ -47,8 +48,8 @@ function aprValidator(input) {
 }
 
 function durationValidator(input) {
-  let validatedInput = parseInt(input, 10);
-  if (Number.isNaN(validatedInput) || validatedInput < 1) {
+  let validatedInput = Number(input);
+  if (Number.isNaN(validatedInput) || validatedInput < 1/12) {
     return null;
   }
   return validatedInput;
@@ -80,7 +81,7 @@ function mortgageCalculator() {
 
   let [loanAmount, apr, durationInYears] = getUserInputs();
 
-  let durationInMonths = durationInYears * 12;
+  let durationInMonths = Math.floor(durationInYears * 12);
   let monthlyInterestRate = (apr / 100) / 12; // convert to decimal then to monthly amount
 
 
