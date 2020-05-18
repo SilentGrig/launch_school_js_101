@@ -41,8 +41,7 @@ function loanValidator(input) {
 
 function aprValidator(input) {
   let validatedInput = parseFloat(input, 10);
-  if (Number.isNaN(validatedInput) || validatedInput < 0
-      || validatedInput > 25) {
+  if (Number.isNaN(validatedInput) || validatedInput < 0) {
     return null;
   }
   return validatedInput;
