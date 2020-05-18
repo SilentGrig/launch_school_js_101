@@ -52,7 +52,7 @@ function aprValidator(input) {
 
 function durationValidator(input) {
   let validatedInput = Number(input);
-  if (Number.isNaN(validatedInput) || validatedInput < 1/12) {
+  if (Number.isNaN(validatedInput) || validatedInput <  1 / 12) {
     return null;
   }
   return validatedInput;
@@ -125,7 +125,7 @@ function main() {
       MESSAGES['anotherCalculationPrompt'],
       continueCalculatingValidator,
       MESSAGES['anotherCalculationValidationMessage']
-    )
+    );
 
     if (continueCalculating === 'n') {
       break;
