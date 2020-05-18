@@ -112,6 +112,10 @@ Returns a New Array of called array with arguments provided, if an array is prov
 
 Returns true or false depending on results of predicate callback provided. If any element returns a falsey value from predicate then will return false.
 
+### Array.prototype.fill()
+
+Fills original array with value provided from starting index to ending index.
+
 ### Array.prototype.filter()
 
 Returns a New Array of length equal to or less than original. With elements that return a truethy value from the predicate callback.
@@ -217,3 +221,11 @@ Returns true or false depending whether object has own property specified. Doesn
 ### Object.values()
 
 Returns Array of values of each key/property in object provided.
+
+## What are elements?
+
+It's possible to add properties to an array which aren't non-negative integers. These don't count as elements, but they can be seen when using `Object.keys(array)`.
+
+It's also possible to add empty elements to an array. By setting the `length` property of the array. This will return `undefined` when you try to access but they will not show up in `Object.keys` or be used when calling `Array.prototype.map`.
+
+This makes in ambigious whether an array is empty or not. What classes as an empty array should be determined on a case by case basis when implementing a solution.
