@@ -40,7 +40,10 @@ function loanValidator(input) {
 }
 
 function aprValidator(input) {
-  let validatedInput = parseFloat(input, 10);
+  if (input.endsWith('%')) {
+    input = input.slice(0, input.length - 1);
+  }
+  let validatedInput = Number(input);
   if (Number.isNaN(validatedInput) || validatedInput < 0) {
     return null;
   }
