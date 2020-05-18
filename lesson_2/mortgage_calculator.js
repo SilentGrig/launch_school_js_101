@@ -62,7 +62,7 @@ function continueCalculatingValidator(input) {
   if (!validInputs.includes(validatedInput)) {
     return null;
   }
-  
+
   return validatedInput[0];
 }
 
@@ -88,8 +88,6 @@ function getUserInputs() {
 }
 
 function mortgageCalculator() {
-  console.log("\n");
-
   let [loanAmount, apr, durationInYears] = getUserInputs();
 
   let durationInMonths = Math.floor(durationInYears * 12);
@@ -115,6 +113,7 @@ function mortgageCalculator() {
 function main() {
   console.clear();
   promptUser(MESSAGES['welcomeMessage']);
+  console.log('\n');
 
   do {
     mortgageCalculator();
@@ -128,7 +127,7 @@ function main() {
     if (continueCalculating === 'n') {
       break;
     }
-
+    console.clear();
   } while (true);
 }
 
