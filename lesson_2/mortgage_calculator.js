@@ -55,6 +55,17 @@ function durationValidator(input) {
   return validatedInput;
 }
 
+function continueCalculatingValidator(input) {
+  let validatedInput = input.toLowerCase();
+  const validInputs = ['y', 'yes', 'n', 'no'];
+
+  if (!validInputs.includes(validatedInput)) {
+    return null;
+  }
+  
+  return validatedInput[0];
+}
+
 function getUserInputs() {
   let loanAmount = getInput(
     MESSAGES['loanAmountPrompt'],
@@ -108,10 +119,13 @@ function main() {
   do {
     mortgageCalculator();
 
-    let continueCalculating = readline
-      .question(MESSAGES['anotherCalculationPrompt']);
+    let continueCalculating = getInput(
+      MESSAGES['anotherCalculationPrompt'],
+      continueCalculatingValidator,
+      MESSAGES['anotherCalculationValidationMessage']
+    )
 
-    if (continueCalculating.toLowerCase()[0] !== 'y') {
+    if (continueCalculating === 'n') {
       break;
     }
 

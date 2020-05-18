@@ -7,5 +7,6 @@
   "durationPrompt": "How long is the loan duration in years? ",
   "durationValidationMessage": "Sorry, the loan duration must be atleast 1 month (0.0834 years).",
   "monthlyPaymentsMessage" : "Your monthly payments are £",
-  "anotherCalculationPrompt": "Do you want do perform another calculation? (y/N) "
+  "anotherCalculationPrompt": "Do you want do perform another calculation? (y/n) ",
+  "anotherCalculationValidationMessage": "Sorry, I didn't understand that. Please say '(y)es' or '(n)o'."
 }
