@@ -11,22 +11,20 @@ function promptUser(message) {
 
 function getInput(message, validator, validationMessage) {
   let input;
-  let validatedInput;
-  let err = false;
+  let validatedInput = null;
 
   do {
-    if (err) {
+    input = readline.question(prompt(message));
+    validatedInput = validator(input);
+    if (validatedInput === null) {
       promptUser(validationMessage);
     }
-    input = readline.question(prompt(message));
-    [validatedInput, err] = validator(input);
-  } while (err);
+  } while (validatedInput === null);
 
   return validatedInput;
 }
 
 function loanValidator(input) {
-  let err = false;
   if (input.startsWith("£")) {
     input = input.slice(1);
   }
@@ -34,29 +32,26 @@ function loanValidator(input) {
   // silently truncate floating point numbers
   let validatedInput = parseInt(input, 10);
   if (Number.isNaN(validatedInput) || validatedInput < 0) {
-    err = true;
+    return null;
   }
-  return [validatedInput, err];
+  return validatedInput;
 }
 
 function aprValidator(input) {
-  let err = false;
   let validatedInput = parseFloat(input, 10);
   if (Number.isNaN(validatedInput) || validatedInput < 0
       || validatedInput > 25) {
-    err = true;
+    return null;
   }
-  return [validatedInput, err];
+  return validatedInput;
 }
 
 function durationValidator(input) {
-  let err = false;
   let validatedInput = parseInt(input, 10);
-  if (Number.isNaN(validatedInput) || validatedInput < 1
-      || validatedInput > 30) {
-    err = true;
+  if (Number.isNaN(validatedInput) || validatedInput < 1) {
+    return null;
   }
-  return [validatedInput, err];
+  return validatedInput;
 }
 
 function getUserInputs() {
