@@ -24,6 +24,7 @@ function welcomeMessage() {
 }
 
 function getFullHandChoice(choice) {
+  choice = choice.toLowerCase();
   for (let choiceName of VALID_CHOICES) {
     if (choiceName === choice ||
         CHOICES[choiceName].shorthand === choice) {
