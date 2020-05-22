@@ -1,55 +1,134 @@
 const readline = require('readline-sync');
-const GAME_TYPES = require('./rock_paper_scissors_config.json');
+const CONFIG = require('./rock_paper_scissors_config.json');
 
+// pick which game to play - see config file for options
 const GAME_TYPE = 'RockPaperScissorsSpockLizard';
-const CHOICES = Object.assign(GAME_TYPES[GAME_TYPE]);
-const DISPLAY_CHOICES = Object.values(CHOICES).map(choice => choice.display);
-const VALID_CHOICES = Object.keys(CHOICES);
 
-const PLAYER_WINS_MESSAGE = 'You won the round!';
-const COMPUTER_WINS_MESSAGE = 'Computer wins the round!';
+// Game Constants
+const {
+  DISPLAY_CHOICES,
+  VALID_CHOICES,
+  CHOICE_BEATS
+} = parseConfig(CONFIG, GAME_TYPE);
+const PLAYER = 'player';
+const COMPUTER = 'computer';
+const DRAW = 'draw';
 
-// Global Variables for Game
-let isPlaying = true;
-let playerScore = 0;
-let computerScore = 0;
-let matchWon = false;
-let roundsPlayed = 0;
-let playerWins = 0;
-let computerWins = 0;
+/*
+ * Config Parsing Functions
+ */
 
-function welcomeMessage() {
-  prompt(`Welcome to ${GAME_TYPE}!`);
+function parseConfig(config, gameType) {
+  const GAME_TYPE_CONFIG = config[gameType];
+
+  const DISPLAY_CHOICES = GAME_TYPE_CONFIG.map(choice => choice.display);
+
+  const VALID_CHOICES = GAME_TYPE_CONFIG.reduce((choices, choice) => {
+    choices[choice.name] = choice.validInputs;
+    return choices;
+  }, {});
+
+  const CHOICE_BEATS = GAME_TYPE_CONFIG.reduce((choices, choice) => {
+    choices[choice.name] = choice.beats;
+    return choices;
+  }, {});
+
+  return {
+    DISPLAY_CHOICES,
+    VALID_CHOICES,
+    CHOICE_BEATS
+  };
+}
+
+/*
+ * Display Functions
+ */
+function prompt(message) {
+  console.log(`=> ${message}`);
+}
+
+function welcomeMessage(gameType) {
+  console.clear();
+  prompt(`Welcome to ${gameType}!`);
   console.log('\n\n\n');
 }
 
-function getFullHandChoice(choice) {
-  choice = choice.toLowerCase();
-  for (let choiceName of VALID_CHOICES) {
-    if (choiceName === choice ||
-        CHOICES[choiceName].shorthand === choice) {
-      return choiceName;
+function displayRoundOutcome(roundWinner, playerChoice,
+  computerChoice, gameState) {
+
+  const { playerRoundScore, computerRoundScore } = gameState;
+
+  console.clear();
+  prompt(`You chose ${playerChoice}, computer chose ${computerChoice}`);
+  if (roundWinner === PLAYER) {
+    prompt('You won the round!');
+  } else if (roundWinner === COMPUTER) {
+    prompt('Computer wins the round!');
+  } else if (roundWinner === DRAW) {
+    prompt("It's a tie!");
+  }
+  prompt(
+    `The points are: Player: ${playerRoundScore}, Computer: ${computerRoundScore}`
+  );
+}
+
+function displayWinner(winner) {
+  console.log('\n');
+  if (winner === PLAYER) {
+    prompt("You won the match!!!");
+  } else if (winner === COMPUTER) {
+    prompt("Unlucky, the computer won the match!");
+  }
+}
+
+function displayMatchScores(gameState) {
+  const { roundsPlayed, playerMatchScore, computerMatchScore } = gameState;
+
+  console.clear();
+  prompt(
+    `You've played ${roundsPlayed} ${pluraliseWord('round', roundsPlayed)}!`
+  );
+  prompt(`You have won ${playerMatchScore} ${pluraliseWord('match', playerMatchScore)}!`);
+  prompt(
+    `The Computer has won ${computerMatchScore} ${pluraliseWord('match', computerMatchScore)}!`
+  );
+  console.log('\n');
+}
+
+/*
+ * Input Functions
+ */
+
+function getPlayerChoice(displayChoices, validChoices) {
+  prompt(`Choose one: ${displayChoices.join(', ')}`);
+  let choice = readline.question();
+  let validatedChoice = getValidatedPlayerChoice(choice, validChoices);
+
+  while (!validatedChoice) {
+    prompt("That's not a valid choice");
+    choice = readline.question();
+    validatedChoice = getValidatedPlayerChoice(choice, validChoices);
+  }
+
+  return validatedChoice;
+}
+
+function getValidatedPlayerChoice(playerChoice, validChoices) {
+  playerChoice = playerChoice.trim().toLowerCase();
+
+  for (let choice of Object.keys(validChoices)) {
+    let validInputs = validChoices[choice];
+    if (validInputs.includes(playerChoice)) {
+      return choice;
     }
   }
+
   return null;
 }
 
-function getWinner(choice, computerChoice) {
-  if (choice === computerChoice) return "It's a tie";
-
-  if (CHOICES[choice]['beats'].includes(computerChoice)) {
-    return PLAYER_WINS_MESSAGE;
-  } else {
-    return COMPUTER_WINS_MESSAGE;
-  }
-}
-
-function displayScores(playerScore, computerScore) {
-  prompt(`The points are: Player: ${playerScore}, Computer: ${computerScore}`);
-}
-
-function prompt(message) {
-  console.log(`=> ${message}`);
+function getComputerChoice(validChoices) {
+  let randomIndex = Math.ceil(Math.random() * validChoices.length) - 1;
+  return validChoices[randomIndex];
 }
 
 function getPlayAgainResponse() {
@@ -58,41 +137,91 @@ function getPlayAgainResponse() {
   let answer = readline.question();
   answer = answer.trim().toLowerCase();
 
-  const validAnswers = ['y', 'yes', 'n', 'no'];
-
-  while (!validAnswers.includes(answer)) {
+  while (!['y', 'yes', 'n', 'no'].includes(answer)) {
     prompt("Please enter 'y' or 'n'.");
     answer = readline.question();
     answer = answer.trim().toLowerCase();
   }
 
-  return answer[0];
+  return ['yes', 'y'].includes(answer);
 }
 
-function getPlayerChoice() {
-  prompt(`Choose one: ${DISPLAY_CHOICES.join(', ')}`);
-  let choice = getFullHandChoice(readline.question());
+/*
+ * Game Helper Functions
+ */
 
-  while (!choice) {
-    prompt("That's not a valid choice");
-    choice = getFullHandChoice(readline.question());
+function getInitialGameState() {
+  const gameState = {
+    matchWon: false,
+    playerRoundScore: 0,
+    computerRoundScore: 0,
+    playerMatchScore: 0,
+    computerMatchScore: 0,
+    roundsPlayed: 0
+  };
+  // prevent new properties from being added
+  Object.seal(gameState);
+  return gameState;
+}
+
+function playRound(gameState) {
+  let playerChoice = getPlayerChoice(DISPLAY_CHOICES, VALID_CHOICES);
+  let computerChoice = getComputerChoice(Object.keys(VALID_CHOICES));
+
+  let roundWinner = getRoundWinner(
+    CHOICE_BEATS, playerChoice, computerChoice
+  );
+
+  updateRoundScores(roundWinner, gameState);
+  displayRoundOutcome(roundWinner, playerChoice, computerChoice, gameState);
+}
+
+function getRoundWinner(choiceBeats, playerChoice, computerChoice) {
+  if (playerChoice === computerChoice) return DRAW;
+
+  if (choiceBeats[playerChoice].includes(computerChoice)) {
+    return PLAYER;
+  } else {
+    return COMPUTER;
   }
-
-  return choice;
 }
 
-function getComputerChoice() {
-  let randomIndex = Math.ceil(Math.random() * VALID_CHOICES.length) - 1;
-  return VALID_CHOICES[randomIndex];
+function getMatchWinner(gameState) {
+  if (gameState.playerRoundScore === 3) {
+    return PLAYER;
+  } else if (gameState.computerRoundScore === 3) {
+    return COMPUTER;
+  }
+  return null;
 }
 
-function updateScores(roundWinnerMessage) {
-  if (roundWinnerMessage === PLAYER_WINS_MESSAGE) {
-    playerScore += 1;
-  } else if (roundWinnerMessage === COMPUTER_WINS_MESSAGE) {
-    computerScore += 1;
+function updateRoundScores(roundWinner, gameState) {
+  if (roundWinner === PLAYER) {
+    gameState.playerRoundScore += 1;
+  } else if (roundWinner === COMPUTER) {
+    gameState.computerRoundScore += 1;
   }
 }
+
+function updateMatchScoresAndState(winner, gameState) {
+  if (winner === PLAYER) {
+    gameState.playerMatchScore += 1;
+  } else if (winner === COMPUTER) {
+    gameState.computerMatchScore += 1;
+  }
+  gameState.matchWon = true;
+}
+
+function updateGameStateOnRoundOver(gameState) {
+  gameState.roundsPlayed += 1;
+  gameState.matchWon = false;
+  gameState.playerRoundScore = 0;
+  gameState.computerRoundScore = 0;
+}
+
+/*
+ * Utility Helper Functions
+ */
 
 function pluraliseWord(word, times) {
   if (word === 'match' && times !== 1) {
@@ -103,91 +232,35 @@ function pluraliseWord(word, times) {
   return word;
 }
 
-function resetGame() {
-  matchWon = false;
-  playerScore = 0;
-  computerScore = 0;
-}
 
-function getMatchWinner() {
-  /* If match has been won returns 1 for player, 2 for computer
-   * If match hasn't been won returns 0
-  */
-  if (playerScore === 3) {
-    return 1;
-  } else if (computerScore === 3) {
-    return 2;
-  }
-  return 0;
-}
+// eslint-disable-next-line max-statements
+(function() {
+  const gameState = getInitialGameState();
 
-function updateMatchScores(winner) {
-  if (winner === 1) {
-    playerWins += 1;
-  } else if (winner === 2) {
-    computerWins += 1;
-  }
-}
+  welcomeMessage(GAME_TYPE);
 
-function displayWinner(winner) {
-  console.log('\n');
-  if (winner === 1) {
-    prompt("You won the match!!!");
-  } else if (winner === 2) {
-    prompt("Unlucky, the computer won the match!");
-  }
-}
+  let isPlaying = true;
+  // GAME LOOP
+  while (isPlaying) {
+    playRound(gameState);
 
-function displayMatchScores() {
-  prompt(
-    `You've played ${roundsPlayed} ${pluraliseWord('round', roundsPlayed)}!`
-  );
-  prompt(`You have won ${playerWins} ${pluraliseWord('match', playerWins)}!`);
-  prompt(
-    `The Computer has won ${computerWins} ${pluraliseWord('match', computerWins)}!`
-  );
-}
-
-console.clear();
-welcomeMessage();
-
-// GAME LOOP
-while (isPlaying) {
-  let playerChoice = getPlayerChoice();
-  let computerChoice = getComputerChoice();
-
-  let roundWinner = getWinner(playerChoice, computerChoice);
-
-  updateScores(roundWinner);
-
-  console.clear();
-  prompt(`You chose ${playerChoice}, computer chose ${computerChoice}`);
-  prompt(roundWinner);
-  displayScores(playerScore, computerScore);
-
-  let matchWinner = getMatchWinner();
-
-  if (matchWinner !== 0) {
-    matchWon = true;
-    updateMatchScores(matchWinner);
-    displayWinner(matchWinner);
-  }
-
-  console.log('\n');
-
-  if (matchWon) {
-    roundsPlayed += 1;
-    let answer = getPlayAgainResponse();
-
-    if (answer === 'n') {
-      isPlaying = false;
-    } else {
-      resetGame();
+    let matchWinner = getMatchWinner(gameState);
+    if (matchWinner) {
+      updateMatchScoresAndState(matchWinner, gameState);
+      displayWinner(matchWinner, gameState);
     }
-    console.clear();
-    displayMatchScores();
-    console.log('\n');
-  }
-}
 
-prompt('Goodbye!');
+    console.log('\n'); // spacing to keep player input on same line
+
+    if (gameState.matchWon) {
+      updateGameStateOnRoundOver(gameState);
+      if (!getPlayAgainResponse()) {
+        isPlaying = false;
+      }
+      displayMatchScores(gameState);
+    }
+  }
+
+  prompt('Goodbye!');
+})();
+
