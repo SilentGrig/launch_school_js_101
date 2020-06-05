@@ -27,26 +27,32 @@ while (playing) {
 
 prompt('Goodbye!');
 
+/* Functions */
+
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
 function initialiseBoard() {
-  return [undefined, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+  let board = [undefined];
+  for (let square = 1; square <= 9; square++) {
+    board.push(' ');
+  }
+  return board;
 }
 
 function displayBoard(board) {
   console.clear();
   console.log('     |     |');
-  console.log('  ' + board[1] + '  |  ' + board[2] + '  |  ' + board[3]);
+  console.log(`  ${board[1]}  |  ${board[2]}  |  ${board[3]}`);
   console.log('     |     |');
   console.log('-----|-----|-----');
   console.log('     |     |');
-  console.log('  ' + board[4] + '  |  ' + board[5] + '  |  ' + board[6]);
+  console.log(`  ${board[4]}  |  ${board[5]}  |  ${board[6]}`);
   console.log('     |     |');
   console.log('-----|-----|-----');
   console.log('     |     |');
-  console.log('  ' + board[7] + '  |  ' + board[8] + '  |  ' + board[9]);
+  console.log(`  ${board[7]}  |  ${board[8]}  |  ${board[9]}`);
   console.log('     |     |');
 }
 
