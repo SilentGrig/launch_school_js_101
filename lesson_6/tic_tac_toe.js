@@ -13,8 +13,9 @@ while (playing) {
     performPlayerMove(board);
     performComputerMove(board);
     displayBoard(board);
-    if (isWinningBoard(board)) {
-      displayWinner();
+    let winner = getWinner(board);
+    if (winner) {
+      displayWinner(winner);
       playingRound = false;
     } else if (isBoardFull(board)) {
       displayTie();
@@ -31,103 +32,116 @@ function prompt(message) {
 }
 
 function initialiseBoard() {
-  return [
-    [' ', ' ', ' '],
-    [' ', ' ', ' '],
-    [' ', ' ', ' ']
-  ];
+  return [undefined, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
 }
 
 function displayBoard(board) {
-  board.forEach(row => {
-    console.log(row.join('|'));
-  });
+  console.clear();
+  console.log('     |     |');
+  console.log('  ' + board[1] + '  |  ' + board[2] + '  |  ' + board[3]);
+  console.log('     |     |');
+  console.log('-----|-----|-----');
+  console.log('     |     |');
+  console.log('  ' + board[4] + '  |  ' + board[5] + '  |  ' + board[6]);
+  console.log('     |     |');
+  console.log('-----|-----|-----');
+  console.log('     |     |');
+  console.log('  ' + board[7] + '  |  ' + board[8] + '  |  ' + board[9]);
+  console.log('     |     |');
+}
+
+
+function getPlayerMove({invalid} = {invalid: false}) {
+  if (invalid) {
+    prompt('Sorry, please give a number between 1 and 9');
+  }
+  prompt('Where would you like to make your move?');
+  let response = readline.prompt();
+  return [Number(response)];
+}
+
+function isValidMove(board, square) {
+  return board[square] === ' ';
+}
+
+function updateBoard(board, mark, square) {
+  board[square] = mark;
 }
 
 function performPlayerMove(board) {
-  let x ,y;
-  do {
-    [x, y] = getPlayerMove();
-  } while (!isValidMove(board, x, y));
-  updateBoard(board, 'X', x, y);
-}
-
-function getPlayerMove() {
-  prompt('Where would you like to make your move?');
-  let response = readline.prompt();
-  let [x, y] = response.split(' ');
-  return [Number(x), Number(y)];
-}
-
-function isValidMove(board, x, y) {
-  return board[y][x] === ' ';
-}
-
-function updateBoard(board, mark, x, y) {
-  board[y][x] = mark;
+  let square = getPlayerMove();
+  while (!isValidMove(board, square)) {
+    square = getPlayerMove({invalid: true});
+  }
+  updateBoard(board, PLAYER, square);
 }
 
 function performComputerMove(board) {
   if (isBoardFull(board)) return;
-  let x, y;
+  let square;
   do  {
-    x = getRandomNumberBetween(0, board[0].length - 1);
-    y = getRandomNumberBetween(0, board.length - 1);
-  } while (!isValidMove(board, x, y));
-  updateBoard(board, 'O', x, y);
+    square = getRandomNumberBetween(1, board.length - 1);
+  } while (!isValidMove(board, square));
+  updateBoard(board, 'O', square);
 }
 
 function getRandomNumberBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function isWinningBoard(board) {
+function getWinner(board) {
   return hasWinningRow(board) || hasWinningColumn(board)
     || hasWinningDiagonal(board);
 }
 
 function hasWinningRow(board) {
-  for (let rowIdx = 0; rowIdx < board.length; rowIdx++) {
-    let row = board[0];
-    let rowMatching = true;
-    for (let colIdx = 1; colIdx < row.length; colIdx++) {
-      if (row[colIdx] !== row[colIdx - 1]) rowMatching = false;
-    }
-    if (rowMatching && row[0] !== ' ') {
-      return true;
+  for (let rowIdx = 1; rowIdx < board.length; rowIdx += 3) {
+    if (board[rowIdx] === PLAYER && board[rowIdx + 1] === PLAYER &&
+      board[rowIdx + 2] === PLAYER) {
+      return PLAYER;
+    } else if (board[rowIdx] === COMPUTER && board[rowIdx + 1] === COMPUTER &&
+      board[rowIdx + 2] === COMPUTER) {
+      return COMPUTER;
     }
   }
-  return false;
+  return null;
 }
 
 function hasWinningColumn(board) {
-  for (let colIdx = 0; colIdx < board[0].length; colIdx++) {
-    let colMatching = true;
-    for (let rowIdx = 1; rowIdx < board.length; rowIdx++) {
-      if (board[rowIdx][colIdx] !== board[rowIdx - 1][colIdx]) {
-        colMatching = false;
-      }
-    }
-    if (colMatching && board[0][colIdx] !== ' ') {
-      return true;
+  for (let colIdx = 1; colIdx < Math.floor(board.length / 3); colIdx++) {
+    if (board[colIdx] === PLAYER && board[colIdx + 3] === PLAYER &&
+      board[colIdx + 6] === PLAYER) {
+      return PLAYER;
+    } else if (board[colIdx] === COMPUTER && board[colIdx + 3] === COMPUTER &&
+      board[colIdx + 6] === COMPUTER) {
+      return COMPUTER;
     }
   }
-  return false;
+  return null;
 }
 
 function hasWinningDiagonal(board) {
-  return (board[0][0] === 'X' && board[0][0] === board[1][1]
-    && board[1][1] === board[2][2]) ||
-    (board[0][2] === 'X' &&  board[0][2] === board[1][1]
-    && board[1][1] === board[2][0]);
+  if ((board[1] === PLAYER && board[5] === PLAYER && board[9] === PLAYER) ||
+      (board[3] === PLAYER && board[5] === PLAYER && board[7] === PLAYER)) {
+    return PLAYER;
+  } else if ((board[1] === COMPUTER && board[5] === COMPUTER &&
+    board[9] === COMPUTER) || (board[3] === COMPUTER && board[5] === COMPUTER &&
+      board[7] === COMPUTER)) {
+    return COMPUTER;
+  }
+  return null;
 }
 
-function displayWinner() {
-  console.log('You won!');
+function displayWinner(winner) {
+  if (winner === PLAYER) {
+    console.log('You won!');
+  } else if (winner === COMPUTER) {
+    console.log('The Computer won!');
+  }
 }
 
 function isBoardFull(board) {
-  return board.every(row => row.every(mark => mark !== ' '));
+  return board.every(mark => mark !== ' ');
 }
 
 function displayTie() {
