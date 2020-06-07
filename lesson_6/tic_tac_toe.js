@@ -38,9 +38,9 @@ function prompt(message) {
 }
 
 function initialiseBoard() {
-  let board = [undefined];
+  let board = {};
   for (let square = 1; square <= 9; square++) {
-    board.push(INITIAL_MARKER);
+    board[square] = INITIAL_MARKER;
   }
   return board;
 }
@@ -63,17 +63,10 @@ function displayBoard(board) {
 }
 
 
-function getPlayerMove({invalid: invalidChoice} = {invalid: false}) {
-  if (invalidChoice) {
-    prompt('Sorry, that\'s not a valid choice.');
-  }
-  prompt('Choose a square (1-9):');
+function getPlayerMove(options) {
+  prompt(`Choose a square (${options.join(', ')}):`);
   let response = readline.prompt().trim();
-  return [Number(response)];
-}
-
-function isValidMove(board, square) {
-  return board[square] === INITIAL_MARKER;
+  return response;
 }
 
 function updateBoard(board, mark, square) {
@@ -81,18 +74,19 @@ function updateBoard(board, mark, square) {
 }
 
 function performPlayerMove(board) {
-  let square = getPlayerMove();
-  while (!isValidMove(board, square)) {
-    square = getPlayerMove({invalid: true});
+  let options = emptySquares(board);
+  debugger;
+  let square = getPlayerMove(options);
+  while (!options.includes(square)) {
+    prompt("Sorry, that's not a valid choice.");
+    square = getPlayerMove(options);
   }
   updateBoard(board, PLAYER_MARKER, square);
 }
 
 function performComputerMove(board) {
-  let square;
-  do  {
-    square = getRandomNumberBetween(1, board.length - 1);
-  } while (!isValidMove(board, square));
+  let options = emptySquares(board);
+  let square = options[getRandomNumberBetween(0, options.length - 1)];
   updateBoard(board, COMPUTER_MARKER, square);
 }
 
@@ -138,7 +132,7 @@ function displayWinner(winner) {
 }
 
 function emptySquares(board) {
-  return board.filter(square => square === INITIAL_MARKER);
+  return Object.keys(board).filter(index => board[index] === INITIAL_MARKER);
 }
 
 function isBoardFull(board) {
