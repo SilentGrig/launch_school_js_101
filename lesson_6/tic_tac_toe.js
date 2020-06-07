@@ -64,7 +64,7 @@ function displayBoard(board) {
 
 
 function getPlayerMove(options) {
-  prompt(`Choose a square (${options.join(', ')}):`);
+  prompt(`Choose a square (${joinOr(options)}):`);
   let response = readline.prompt().trim();
   return response;
 }
@@ -75,7 +75,6 @@ function updateBoard(board, mark, square) {
 
 function performPlayerMove(board) {
   let options = emptySquares(board);
-  debugger;
   let square = getPlayerMove(options);
   while (!options.includes(square)) {
     prompt("Sorry, that's not a valid choice.");
@@ -150,4 +149,19 @@ function playingAgain() {
     response = readline.prompt().toLowerCase();
   } while (!['yes', 'y', 'no', 'n'].includes(response));
   return ['yes', 'y'].includes(response);
+}
+
+function joinOr(list, delimiter = ', ', word = 'or') {
+  const lastIdx = list.length - 1;
+  switch (list.length) {
+    case 0:
+      return '';
+    case 1:
+      return String(list[0]);
+    case 2:
+      return list.join(` ${word} `);
+    default:
+      return list.slice(0, lastIdx).join(delimiter) +
+             `${delimiter}${word} ${list[lastIdx]}`;
+  }
 }
